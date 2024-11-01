@@ -3,6 +3,7 @@ package com.wellsfargo.counselor.entity;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Portfolio {
@@ -15,13 +16,17 @@ public class Portfolio {
     @JoinColumn(name = "clientId", nullable = false)
     private Client client;
 
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Security> securities;
+
     @Column(nullable = false)
     private Date creationDate;
 
     protected Portfolio() {}
 
-    public Portfolio(Client client, Date creationDate) {
+    public Portfolio(Client client, List<Security> securities, Date creationDate) {
         this.client = client;
+        this.securities = securities;
         this.creationDate = creationDate;
     }
 
@@ -39,5 +44,13 @@ public class Portfolio {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public List<Security> getSecurities() {
+        return securities;
+    }
+
+    public void setSecurities(List<Security> securities) {
+        this.securities = securities;
     }
 }
